@@ -42,7 +42,7 @@ user-select: none; /* Standard */
   position: absolute;
   color: #bbc2dd;
   font-size: 40px;
-  
+  vertical-align: middle;
   text-align: center;
   visibility: "hidden";
   top: 9px; 
