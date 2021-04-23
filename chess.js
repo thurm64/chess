@@ -12,6 +12,7 @@ var blackQs = true;
 var whiteKs = true;
 var whiteQs = true;
 var epCol = -1;
+var ply = 0;
 var legalMoves = [];
 var boardArray = [
   ["r","n","b","q","k","b","n","r"],
@@ -27,6 +28,67 @@ function sendDisplay(msg) {
 	document.getElementById("boardOverlay").style.visibility = "visible"
 	document.getElementById("boardOverlay").innerHTML = msg + "<br><a href = \"" + self.location + "\">Play Again</a>"
 }
+
+function makeFen() 
+{
+	try {
+	var fen = "";
+	for(var r in boardArray) {
+		var spaceCount = 0;
+		for(var c in boardArray[0]) {
+			if(boardArray[r][c] !== " ") {
+				if(spaceCount != 0) {
+					fen += spaceCount;
+					
+				}
+				fen += boardArray[r][c];
+				spaceCount = 0;
+			} else {
+				spaceCount++;
+			}
+		}
+		if(spaceCount != 0) {
+			fen += spaceCount;
+			
+		}
+		if(r != 7) {
+		fen += "/";
+		}
+	}
+	fen += " "
+	if(whitePly) {
+		fen += "w"
+			
+	} else {
+		fen += "b"
+	}
+	fen += " ";
+	if(whiteKs) {
+		fen += "K"
+	}
+	if(whiteQs) {
+		fen += "Q"
+	}
+	if(blackKs) {
+		fen += "k"
+	}
+	if(blackQs) {
+		fen += "q"
+	} 
+	fen += " ";
+	if(epCol != -1) {
+		if(whitePly) {
+			fen += String.fromCharCode(65 + epCol) + 6;
+		} else {
+			fen += String.fromCharCode(65 + epCol) + 3;
+		} 
+	}
+	fen += " 0 ";
+	fen += Math.ceil(ply / 2);
+	return fen;
+	} catch(e) {window.alert(e)}
+}
+
 var whitePly = true;
 function moveHandler(x,y) {
 	var epCap = false;
@@ -36,8 +98,8 @@ function moveHandler(x,y) {
 	var selx = selectedSquare[1];
 	var piece = boardArray[selectedSquare[0]][selectedSquare[1]];
 	epCol = -1;
-	
-	
+	promote = null;
+		
 	
 		if(move[0] == y && move[1] == x) {
 			if(piece.toLowerCase() == "p" && Math.abs(sely - y) > 1) {
@@ -57,10 +119,10 @@ function moveHandler(x,y) {
 			}else if((piece == "r" && sely == 0 && selx == 0) || (boardArray[y][x] == "r" && y == 0 && x == 0)) {
 				blackQs = false;
 			}else if(piece == "P" && y == 0) {
-				piece = document.getElementById("selectPromotion").value.toUpperCase();
+				promote = document.getElementById("selectPromotion").value.toUpperCase();
 			
 			}else if(piece == "p" && y == 7) {
-				piece = document.getElementById("selectPromotion").value;
+				promote = document.getElementById("selectPromotion").value;
 			
 			}
 			  else if(piece == "K") {
@@ -98,9 +160,13 @@ function moveHandler(x,y) {
 			} else {
 				sound = new Audio("sounds/move.wav");
 			}
-			
+			if(promote === null) {
 			boardArray[y][x] = piece;
 			boardArray[selectedSquare[0]][selectedSquare[1]] = " ";
+			} else {
+				boardArray[y][x] = promote;
+				boardArray[selectedSquare[0]][selectedSquare[1]] = " ";
+			}
 			whitePly = !whitePly;
 
 			if(isInCheck(boardArray)) {
@@ -112,10 +178,12 @@ function moveHandler(x,y) {
 			break;
 		}
 	}
+		ply += 1;
 	  legalMoves = [];
 	  selectedSquare = [-1, -1];
 	  drawPosition();
 	  setTimeout(endCheck, 100);
+	  document.getElementById("fen").value = makeFen();
 }
 function endCheck() {
 	if(isInCheck(boardArray)) {
