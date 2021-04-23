@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const width = canvas.width;
@@ -77,7 +76,8 @@ function moveHandler(x,y) {
 			}
 				whiteKs = false; 
 				whiteQs = false;
-			}else if(piece == "K") {
+					
+			}else if(piece == "k") {
 			 if(Math.abs(selx - x) > 1) {
 			 	if(selx - x < 0) {// castling
 					boardArray[0][7] = " ";
@@ -87,8 +87,8 @@ function moveHandler(x,y) {
 					boardArray[0][2] = "r";
 				}
 			}
-			 	blackQs = false; 
-			 	blackKs = false;
+				blackQs = false; 
+				blackKs = false;
 			 
 			} 
 			var sound = null;
@@ -132,25 +132,46 @@ function endCheck() {
 		console.log("nothing happened");
 	}
 }
-function mouseAction(event) {
-  var mouseX = event.clientX;
+
+document.oncontextmenu = function(event) {
+	
+	event.preventDefault();
+	var mouseX = event.clientX;
   var mouseY = event.clientY;
   var x = Math.floor(mouseX / squareSize);
   var y = Math.floor(mouseY / squareSize);
-  
-	if(event.button == 2 || event.ctrlKey) {
+  if(x < -1 || x > 7 || y < -1 || y > 7) {
+	return;
+}
+  event.preventDefault();
+		var color =  "rgba(192, 96, 96, 0.7)";
+		if(event.shiftKey) {
+			color =  "rgba(96, 192, 96, 0.7)"
+		}
+		if(event.ctrlKey) {
+			color =  "rgba(96, 96, 192, 0.7)"
+		}
+		if(event.altKey) {
+			color =  "rgba(192, 192, 96, 0.7)"
+		}
 	  if(isPieceSelected) {
 	  	selectedSquare = [-1, -1]
 	  	isPieceSelected = false;
 	  	drawPosition();
 	  }
-	  event.preventDefault();
 	  if(selectedSquare[0] == -1) {  selectedSquare = [y, x]; return;} else {
-	  drawArrow(ctx, x, y, selectedSquare[1], selectedSquare[0]);
+	  drawArrow(ctx, x, y, selectedSquare[1], selectedSquare[0], color);
 	  selectedSquare = [-1, -1];
 	  
-	  }
-	} else if(event.button === 0) {
+	  
+}
+}
+function mouseAction(event) {
+  var mouseX = event.clientX;
+  var mouseY = event.clientY;
+  var x = Math.floor(mouseX / squareSize);
+  var y = Math.floor(mouseY / squareSize);
+ if(event.button === 0) {
 	if(selectedSquare[0] == -1 || !isPieceSelected || boardArray[y][x] != " ") {
 		var piece = boardArray[y][x]
 	  if(piece != " " && isTurn(piece)) {
@@ -607,7 +628,7 @@ function areLegalMoves(pos) {
 }
 
 
-function drawArrow(context, x2, y2, x, y) {
+function drawArrow(context, x2, y2, x, y, color) {
 	var fromx = (x * squareSize) + squareSize / 2;
 	var tox = (x2 * squareSize) + squareSize / 2;
 	var fromy = (y * squareSize) + squareSize / 2;
@@ -619,7 +640,7 @@ function drawArrow(context, x2, y2, x, y) {
 	context.beginPath();
 	context.lineCap = 'round'
 	context.lineWidth = 10;
-	context.strokeStyle = "rgba(192, 96, 96, 0.7)"
+	context.strokeStyle = color;
 	if(fromx == tox && fromy == toy) {
 		ctx.arc(tox,toy,(squareSize - 2) / 2, 0,2*Math.PI);
 	} else {
