@@ -74,10 +74,8 @@ function moveHandler(x,y) {
 					boardArray[7][0] = " ";
 					boardArray[7][2] = "R";
 				}
-				} else {
-					whiteKs = false; 
-					whiteQs = false;
-				}
+				whiteKs = false; 
+				whiteQs = false;
 			}else if(piece == "K") {
 			 if(Math.abs(selx - x) > 1) {
 			 	if(selx - x < 0) {// castling
@@ -87,10 +85,10 @@ function moveHandler(x,y) {
 					boardArray[0][0] = " ";
 					boardArray[0][2] = "r";
 				}
-			 } else {
+			 
 			 	blackQs = false; 
 			 	blackKs = false;
-			 }
+			 
 			} 
 			var sound = null;
 			if(boardArray[y][x] != " " || epCap) {
