@@ -64,7 +64,7 @@ function moveHandler(x,y) {
 				boardArray[selectedSquare[0]][selectedSquare[1]] = document.getElementById("selectPromotion").value;
 			
 			}
-			 else if(piece == "K") {
+			  else if(piece == "K") {
 				if(Math.abs(selx - x) > 1) {
 			
 				if(selx - x < 0) { // castling
@@ -74,6 +74,7 @@ function moveHandler(x,y) {
 					boardArray[7][0] = " ";
 					boardArray[7][2] = "R";
 				}
+			}
 				whiteKs = false; 
 				whiteQs = false;
 			}else if(piece == "K") {
@@ -85,7 +86,7 @@ function moveHandler(x,y) {
 					boardArray[0][0] = " ";
 					boardArray[0][2] = "r";
 				}
-			 
+			}
 			 	blackQs = false; 
 			 	blackKs = false;
 			 
