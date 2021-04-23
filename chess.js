@@ -58,10 +58,10 @@ function moveHandler(x,y) {
 			}else if((piece == "r" && sely == 0 && selx == 0) || (boardArray[y][x] == "r" && y == 0 && x == 0)) {
 				blackQs = false;
 			}else if(piece == "P" && y == 0) {
-				boardArray[selectedSquare[0]][selectedSquare[1]] = document.getElementById("selectPromotion").value.toUpperCase();
+				piece = document.getElementById("selectPromotion").value.toUpperCase();
 			
 			}else if(piece == "p" && y == 7) {
-				boardArray[selectedSquare[0]][selectedSquare[1]] = document.getElementById("selectPromotion").value;
+				piece = document.getElementById("selectPromotion").value;
 			
 			}
 			  else if(piece == "K") {
@@ -99,7 +99,7 @@ function moveHandler(x,y) {
 				sound = new Audio("sounds/move.wav");
 			}
 			
-			boardArray[y][x] = boardArray[selectedSquare[0]][selectedSquare[1]];
+			boardArray[y][x] = piece;
 			boardArray[selectedSquare[0]][selectedSquare[1]] = " ";
 			whitePly = !whitePly;
 
